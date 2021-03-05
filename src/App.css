@@ -1,0 +1,8 @@
+.button-and-search {
+  display: flex;
+  justify-content: stretch;
+}
+
+.button-and-search input[type='search'] {
+  width: 100%;
+}

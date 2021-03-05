@@ -1,0 +1,14 @@
+.memo-add-button {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 128px;
+  height: 128px;
+  padding: 8px;
+  margin: 4px;
+  position: relative;
+  background-color: white;
+  border: 1px solid #7F7F7F;
+
+  font-size: 64px;
+  cursor: pointer;
+}

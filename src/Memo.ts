@@ -26,7 +26,7 @@ export function tagsArrayAreEqual(arr1: string[], arr2: string[]) {
   arr2 = arr2.slice().sort();
   
   for (let i = 0; out && i < arr1.length; ++i) {
-    out &&= arr1[i] === arr2[i];
+    out = out && arr1[i] === arr2[i];
   }
 
   return out;
