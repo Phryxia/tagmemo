@@ -1,0 +1,14 @@
+.tag {
+  margin-right: 0.5em;
+  padding: 2px 0.5em 2px 0.5em;
+  border-radius: 5px;
+  background-color: #F0E992;
+}
+
+.tag > input[type='button'] {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25em;
+}

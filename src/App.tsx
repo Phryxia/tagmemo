@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from 'react';
 
 import Memo, { tagsArrayAreEqual } from './Memo';
-
 import GeneralMemoList from './GeneralMemoList';
 import SearchedMemoList from './SearchedMemoList';
+import MemoEditor from './MemoEditor';
+import MemoPreview from './MemoPreview';
 
+import store from './redux-store';
 import State from './redux-state';
 import { connect } from 'react-redux';
 import './App.css';
@@ -18,8 +20,14 @@ interface AppProps {
  * 검색을 하지 않았거나 키워드가 없는 경우 일반 화면을 띄운다.
  */
 const App = ({ memos }: AppProps) => {
+  // 현재 검색창에 입력한 검색어들
   const [curKeywords, setCurKeywords] = useState<string[]> ([]);
+
+  // 검색 버튼을 눌렀을 때 검색에 사용할 검색어들
   const [lastKeywords, setLastKeywords] = useState<string[]> ([]);
+
+  // 메모 에디터에 띄울 메모. 없으면 null
+  const [currentMemo, setCurrentMemo] = useState<Memo | null> (memos[0]);
 
   // 현재 입력된 키워드를 갱신함.
   const onSearchChange = useCallback(event => {
@@ -38,6 +46,30 @@ const App = ({ memos }: AppProps) => {
     setLastKeywords(curKeywords);
   }, [curKeywords]);
 
+  // 메모 편집기 모달에서 수정 누르면 실행
+  const onClickModify = useCallback((memo: Memo) => {
+    store.dispatch({ type: 'memo/modify', payload: memo })
+  }, []);
+
+  // 메모 편집기 모달에서 취소 누르면 실행
+  const onClickCancel = useCallback(() => {
+    setCurrentMemo(null);
+  }, []);
+
+  // 현재 보여질 메모 컴포넌트들을 설정
+  // 굳이 App에서 이걸 만들어서 내려보내는 이유는
+  // 이벤트 핸들러를 중간단계 경유해서 보내기가 싫어서임
+  let visibleMemos = [];
+  if (lastKeywords.length > 0)
+    visibleMemos = searchMemos(memos, lastKeywords);
+  else
+    visibleMemos = memos;
+
+  // 메모를 클릭하면 현재 편집 중인 메모를 설정함
+  const memoComponents = visibleMemos.map(memo => 
+    <MemoPreview key={memo.id} memo={memo} onClickMemo={(memo: Memo) => setCurrentMemo(memo)} />
+  );
+
   return (
     <div>
       <h1>TagMeMo</h1>
@@ -48,7 +80,15 @@ const App = ({ memos }: AppProps) => {
       </div>
       
       <hr />
-      {lastKeywords.length > 0 ? <SearchedMemoList memos={searchMemos(memos, lastKeywords)} /> : <GeneralMemoList memos={memos} />}
+      {lastKeywords.length > 0 ? 
+        <SearchedMemoList memoComponents={memoComponents} /> : 
+        <GeneralMemoList memoComponents={memoComponents} />}
+
+      {/* 모달창 (메모 편집기) */}
+      {currentMemo && 
+      <div className='wall'>
+        <MemoEditor memo={currentMemo} onClickModify={onClickModify} onClickCancel={onClickCancel} />
+      </div>}
     </div>
   );
 };
