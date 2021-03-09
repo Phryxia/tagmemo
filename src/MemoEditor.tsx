@@ -20,6 +20,9 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
   // 현재 편집기가 표시할 수정날짜
   const [modifiedAt, setModifiedAt] = useState<Date> (memo.modifiedAt);
 
+  // 태그 추가하기 인풋에 입력된 데이터
+  const [newTag, setNewTag] = useState<string> ('');
+
   // 콘텐츠 수정 콜백
   const onChangeTextarea = useCallback((event) => {
     setContent(event.target.value);
@@ -47,6 +50,18 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
     setTags((tags: string[]) => tags.filter(tag => tag !== deletedTag));
   }, []);
 
+  // 태그 추가하기 인풋 핸들러
+  const onChangeNewTag = useCallback((event) => {
+    setNewTag(event.target.value.trim());
+  }, []);
+
+  const onKeyUpNewTag = useCallback((event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      setTags((tags: string[]) => [...tags, newTag]);
+      setNewTag('');
+    }
+  }, [newTag]);
+
   return (
     <div className='memo-editor'>
       {/* 메모와 수정 날짜 */}
@@ -62,7 +77,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
       <div className='memo-editor-header'>태그</div>
       <div className='memo-editor-tags'>
         {tags.map((tag: string) => <Tag key={tag} tag={tag} onClickClose={onClickTagClose} />)}
-        <div>+<input type='text' /></div>
+        <div>+<input type='text' value={newTag} onChange={onChangeNewTag} onKeyUp={onKeyUpNewTag} /></div>
       </div>
 
       {/* 버튼 */}
