@@ -56,8 +56,9 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
     setNewTag(event.target.value.trim());
   }, []);
 
+  // 스페이스나 엔터 치면, 공백이 아니면 태그를 추가함
   const onKeyUpNewTag = useCallback((event) => {
-    if (event.key === ' ' || event.key === 'Enter') {
+    if ((event.key === ' ' || event.key === 'Enter') && newTag) {
       setTags((tags: string[]) => [...tags, newTag]);
       setNewTag('');
     }
