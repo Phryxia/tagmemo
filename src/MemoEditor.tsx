@@ -6,8 +6,8 @@ import './MemoEditor.css';
 
 interface MemoEditorProps {
   memo: Memo,
-  onClickModify?: (memo: Memo) => void,
-  onClickCancel?: () => void
+  onClickModify: (memo: Memo) => void,
+  onClickCancel: () => void
 }
 
 const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => {
@@ -17,6 +17,9 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
   // 현재 편집기가 표시할 태그들
   const [tags, setTags] = useState<string[]> (memo.tags);
 
+  // 현재 편집기가 표시할 수정날짜
+  const [modifiedAt, setModifiedAt] = useState<Date> (memo.modifiedAt);
+
   // 콘텐츠 수정 콜백
   const onChangeTextarea = useCallback((event) => {
     setContent(event.target.value);
@@ -24,19 +27,24 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
 
   // 수정 버튼 핸들러
   const onClickModifyButton = useCallback(() => {
-    if (onClickModify)
-      onClickModify({
-        id: memo.id,
-        content,
-        tags,
-        modifiedAt: new Date()
-      });
-  }, [memo]);
+    const newDate = new Date();
+    onClickModify({
+      id: memo.id,
+      content,
+      tags,
+      modifiedAt: newDate
+    });
+    setModifiedAt(newDate);
+  }, [memo, content, tags]);
 
   // 취소 버튼 핸들러
   const onClickCancelButton = useCallback(() => {
-    if (onClickCancel)
-      onClickCancel();
+    onClickCancel();
+  }, []);
+
+  // 태그 삭제 버튼 핸들러
+  const onClickTagClose = useCallback((deletedTag: string) => {
+    setTags((tags: string[]) => tags.filter(tag => tag !== deletedTag));
   }, []);
 
   return (
@@ -44,7 +52,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
       {/* 메모와 수정 날짜 */}
       <div className='memo-editor-header'>
         메모
-        <span>modified at {Util.formatDate(memo.modifiedAt)}</span>
+        <span>modified at {Util.formatDate(modifiedAt)}</span>
       </div>
 
       {/* 메모 입력 */}
@@ -53,7 +61,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
       {/* 태그들 */}
       <div className='memo-editor-header'>태그</div>
       <div className='memo-editor-tags'>
-        {tags.map((tag: string) => <Tag key={tag} tag={tag} />)}
+        {tags.map((tag: string) => <Tag key={tag} tag={tag} onClickClose={onClickTagClose} />)}
         <div>+<input type='text' /></div>
       </div>
 
