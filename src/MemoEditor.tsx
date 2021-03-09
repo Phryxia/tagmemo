@@ -7,10 +7,11 @@ import './MemoEditor.css';
 interface MemoEditorProps {
   memo: Memo,
   onClickModify: (memo: Memo) => void,
-  onClickCancel: () => void
+  onClickCancel: () => void,
+  isNewMemo: boolean
 }
 
-const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => {
+const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEditorProps) => {
   // 현재 편집기가 표시할 콘텐츠
   const [content, setContent] = useState<string> (memo.content);
 
@@ -82,7 +83,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel }: MemoEditorProps) => 
 
       {/* 버튼 */}
       <div className='memo-editor-buttons'>
-        <input type='button' value='수정' onClick={onClickModifyButton} />
+        <input type='button' value={isNewMemo ? '확인' : '수정'} onClick={onClickModifyButton} />
         <input type='button' value='취소' onClick={onClickCancelButton} />
       </div>
     </div>

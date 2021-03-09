@@ -30,7 +30,10 @@ const App = ({ memos }: AppProps) => {
   const [lastKeywords, setLastKeywords] = useState<string[]> ([]);
 
   // 메모 에디터에 띄울 메모. 없으면 null
-  const [currentMemo, setCurrentMemo] = useState<Memo | null> (memos[0]);
+  const [currentMemo, setCurrentMemo] = useState<Memo | null> (null);
+
+  // currentMemo가 새로 생성한 메모인지 기존의 메모인지
+  const [isNewMemo, setIsNewMemo] = useState<boolean> (false);
 
   // 현재 입력된 키워드를 갱신함.
   const onSearchChange = useCallback(event => {
@@ -51,7 +54,7 @@ const App = ({ memos }: AppProps) => {
   }, [curKeywords]);
 
   // 검색 결과를 보여주는 창에서 x버튼 누르면 실행. (메인으로 돌아가기)
-  const onClickSearchClose = useCallback(() => {
+  const onSearchCloseClick = useCallback(() => {
     setSearchString('');
     setCurKeywords([]);
     setLastKeywords([]);
@@ -86,8 +89,17 @@ const App = ({ memos }: AppProps) => {
 
   // 메모를 클릭하면 현재 편집 중인 메모를 설정함
   const memoComponents = visibleMemos.map(memo => 
-    <MemoPreview key={memo.id} memo={memo} onClickMemo={(memo: Memo) => setCurrentMemo(memo)} />
+    <MemoPreview key={memo.id} memo={memo} onClickMemo={(memo: Memo) => {
+      setCurrentMemo(memo); 
+      setIsNewMemo(false);
+    }} />
   );
+
+  // 새로 생성한 메모는 생성하자 마자 창을 띄운다.
+  const onMemoAdd = useCallback((newMemo: Memo) => {
+    setCurrentMemo(newMemo);
+    setIsNewMemo(true);
+  }, []);
 
   return (
     <div>
@@ -100,13 +112,13 @@ const App = ({ memos }: AppProps) => {
       
       <hr />
       {lastKeywords.length > 0 ? 
-        <SearchedMemoList memoComponents={memoComponents} onClose={onClickSearchClose} /> : 
-        <GeneralMemoList memoComponents={memoComponents} />}
+        <SearchedMemoList memoComponents={memoComponents} onClose={onSearchCloseClick} /> : 
+        <GeneralMemoList memoComponents={memoComponents} onMemoAdd={onMemoAdd} />}
 
       {/* 모달창 (메모 편집기) */}
       {currentMemo && 
       <div className='wall'>
-        <MemoEditor memo={currentMemo} onClickModify={onClickModify} onClickCancel={onClickCancel} />
+        <MemoEditor memo={currentMemo} onClickModify={onClickModify} onClickCancel={onClickCancel} isNewMemo={isNewMemo} />
       </div>}
     </div>
   );
