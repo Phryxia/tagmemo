@@ -48,7 +48,8 @@ const App = ({ memos }: AppProps) => {
 
   // 메모 편집기 모달에서 수정 누르면 실행
   const onClickModify = useCallback((memo: Memo) => {
-    store.dispatch({ type: 'memo/modify', payload: memo })
+    store.dispatch({ type: 'memo/modify', payload: memo });
+    setCurrentMemo(null);
   }, []);
 
   // 메모 편집기 모달에서 취소 누르면 실행
