@@ -84,15 +84,16 @@ const App = ({ memos }: AppProps) => {
   let visibleMemos = [];
   if (lastKeywords.length > 0)
     visibleMemos = searchMemos(memos, lastKeywords);
-  else
+  else {
     visibleMemos = memos;
-
-  // 수정할 때마다 보여지는 순서가 바뀌면 곤란하므로 id순으로 정렬
-  // any로 한 이유: id가 undefined일 수 있다는 에러가 뜸... 
-  // 근데 visibleMemos는 id가 모두 존재할 수 밖에 없음
-  visibleMemos.sort((memo1: any, memo2: any) => {
-    return memo1.id - memo2.id;
-  });
+   
+    // 수정할 때마다 보여지는 순서가 바뀌면 곤란하므로 id순으로 정렬
+    // any로 한 이유: id가 undefined일 수 있다는 에러가 뜸... 
+    // 근데 visibleMemos는 id가 모두 존재할 수 밖에 없음
+    visibleMemos.sort((memo1: any, memo2: any) => {
+      return memo1.id - memo2.id;
+    });
+  }
 
   // 메모를 클릭하면 현재 편집 중인 메모를 설정함
   const memoComponents = visibleMemos.map(memo => 
@@ -134,23 +135,44 @@ const App = ({ memos }: AppProps) => {
 
 /**
  * memos에서 keywords로 검색하여 결과를 반환한다.
+ * 이때 자체적으로 rank를 분석하여 정렬한다.
  * @param memos 
  * @param keywords 
  */
 function searchMemos(memos: Memo[], keywords: string[]): Memo[] {
-  return memos.filter(memo => {
-    let approve = false;
+  // 메모-랭크 쌍을 생성
+  const pairs = memos.map(memo => [memo, rank(memo, keywords)])
+    .filter(pair => pair[1] > 0);
+
+  // 랭크순으로 정렬
+  pairs.sort((p1: any, p2: any) => p2[1] - p1[1]);
+
+  // 메모만 반환
+  return pairs.map((pair: any) => pair[0]);
+}
+
+/**
+ * memo의 rank를 keywords로 평가하여 점수로 반환한다.
+ * @param memo 메모
+ * @param keywords 키워드들 
+ * @returns 점수
+ */
+function rank(memo: Memo, keywords: string[]): number {
+  let score = 0;
+
+  keywords.forEach(keyword => {
+    // 본문에 keyword가 포함돼 있으면 1점
+    if (memo.content.includes(keyword))
+      score += 1;
     
-    keywords.forEach(keyword => {
-      // 본문에 keyword가 포함돼 있으면 검색
-      approve = approve || memo.content.includes(keyword);
-
-      // 태그에 keyword가 포함돼 있으면 검색
-      approve = approve || memo.tags.indexOf(keyword) !== -1;
-    });
-
-    return approve;
+    // 검색어가 태그에 포함되거나 태그가 검색어에 포함되면 1점
+    memo.tags.forEach(tag => {
+      if (tag.includes(keyword) || keyword.includes(tag))
+        score += 1;
+    })
   });
+
+  return score;
 }
 
 export default connect((state: State) => ({ memos: state.memos }))(App);
