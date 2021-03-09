@@ -6,9 +6,5 @@
 }
 
 .tag > input[type='button'] {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
   margin-left: 0.25em;
 }

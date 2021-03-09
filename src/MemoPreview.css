@@ -19,13 +19,6 @@
   font-size: 12px;
 }
 
-.date-and-close input {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
 .content-and-tags {
   position: relative;
   flex: 1;

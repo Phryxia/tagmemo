@@ -20,6 +20,9 @@ interface AppProps {
  * 검색을 하지 않았거나 키워드가 없는 경우 일반 화면을 띄운다.
  */
 const App = ({ memos }: AppProps) => {
+  // 검색창에 뜨는 문자열. 닫기 버튼 눌렀을 때 강제로 ''를 만들기 위해 존재
+  const [searchString, setSearchString] = useState<string> ('');
+
   // 현재 검색창에 입력한 검색어들
   const [curKeywords, setCurKeywords] = useState<string[]> ([]);
 
@@ -31,6 +34,7 @@ const App = ({ memos }: AppProps) => {
 
   // 현재 입력된 키워드를 갱신함.
   const onSearchChange = useCallback(event => {
+    setSearchString(event.target.value);
     const trimmed = event.target.value.trim();
 
     // 검색창에 아무 것도 입력돼 있지 않으면 []로 설정해야 함
@@ -45,6 +49,13 @@ const App = ({ memos }: AppProps) => {
   const onSearchClick = useCallback(event => {
     setLastKeywords(curKeywords);
   }, [curKeywords]);
+
+  // 검색 결과를 보여주는 창에서 x버튼 누르면 실행. (메인으로 돌아가기)
+  const onClickSearchClose = useCallback(() => {
+    setSearchString('');
+    setCurKeywords([]);
+    setLastKeywords([]);
+  }, []);
 
   // 메모 편집기 모달에서 수정 누르면 실행
   const onClickModify = useCallback((memo: Memo) => {
@@ -84,12 +95,12 @@ const App = ({ memos }: AppProps) => {
       <h2>검색하기</h2>
       <div className='button-and-search'>
         <input type='button' value='검색' onClick={onSearchClick} />
-        <input type='search' placeholder='태그를 띄어쓰기해서 입력해주세요' onChange={onSearchChange} />
+        <input type='search' placeholder='태그를 띄어쓰기해서 입력해주세요' value={searchString} onChange={onSearchChange} />
       </div>
       
       <hr />
       {lastKeywords.length > 0 ? 
-        <SearchedMemoList memoComponents={memoComponents} /> : 
+        <SearchedMemoList memoComponents={memoComponents} onClose={onClickSearchClose} /> : 
         <GeneralMemoList memoComponents={memoComponents} />}
 
       {/* 모달창 (메모 편집기) */}

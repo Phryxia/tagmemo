@@ -1,0 +1,10 @@
+/* 문자열 '검색결과'가 인라인 블록으로 나오게 */
+.no-wrap {
+  display: inline-block;
+}
+
+/* 검색결과 옆에 뜨는 닫기 버튼 */
+#cancel-search {
+  font-size: 24px;
+  margin-left: 0.25em;
+}

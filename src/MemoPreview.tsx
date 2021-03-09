@@ -3,6 +3,7 @@ import Memo, { memosAreEqual } from './Memo';
 import store from './redux-store';
 import * as Util from './Util';
 import './MemoPreview.css';
+import './CloseButton.css';
 
 interface MemoPreviewProps {
   memo: Memo,
@@ -26,7 +27,7 @@ const MemoPreview = React.memo(({ memo, onClickMemo }: MemoPreviewProps) => {
       {/* 메모 상단 날짜랑 삭제 버튼 */}
       <div className='date-and-close'>
         {Util.formatDate(memo.modifiedAt)}
-        <input type='button' value='×' onClick={onClickCloseButton} />
+        <input type='button' value='×' onClick={onClickCloseButton} className='close-button' />
       </div>
 
       {/* 메모 내용 미리보기 */}

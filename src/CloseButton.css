@@ -1,0 +1,7 @@
+/* 속이 빈 x만 쳐져있는 버튼 */
+.close-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}

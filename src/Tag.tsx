@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import './Tag.css';
+import './CloseButton.css';
 
 interface TagProps {
   tag: string,
@@ -18,7 +19,7 @@ const Tag = React.memo(({ tag, onClickClose }: TagProps) => {
   return (
     <div className='tag'>
       {tag}
-      <input type='button' value='×' onClick={onClickCloseButton} />
+      <input type='button' value='×' onClick={onClickCloseButton} className='close-button' />
     </div>
   );
 });
