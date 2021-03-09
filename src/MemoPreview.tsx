@@ -13,8 +13,7 @@ interface MemoPreviewProps {
  * 메인에서 메모 미리보기 버튼들을 담당하는 컴포넌트
  */
 const MemoPreview = React.memo(({ memo, onClickMemo }: MemoPreviewProps) => {
-
-  const onClickA = useCallback(() => {
+  const onClickArea = useCallback((event) => {
     onClickMemo(memo);
   }, [memo]);
 
@@ -31,13 +30,15 @@ const MemoPreview = React.memo(({ memo, onClickMemo }: MemoPreviewProps) => {
       </div>
 
       {/* 메모 내용 미리보기 */}
-      <a onClick={onClickA}>{summarize(memo.content, 25)}</a>
+      <div className='content-and-tags' onClick={onClickArea}>
+        <a>{summarize(memo.content, 25)}</a>
 
-      {/* 태그들 */}
-      <div className='memo-preview-tags'>
-      {
-        summarize(memo.tags.map(tag => `#${tag}`).join(' '), 16)
-      }
+        {/* 태그들 */}
+        <div className='memo-preview-tags'>
+        {
+          summarize(memo.tags.map(tag => `#${tag}`).join(' '), 11)
+        }
+        </div>
       </div>
     </div>
   );
