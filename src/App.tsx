@@ -53,6 +53,13 @@ const App = ({ memos }: AppProps) => {
     setLastKeywords(curKeywords);
   }, [curKeywords]);
 
+  // 엔터치면 검색되게 함
+  const onSearchKeyUp = useCallback(event => {
+    if (event.key === 'Enter') {
+      onSearchClick(null);
+    }
+  }, [curKeywords]);
+
   // 검색 결과를 보여주는 창에서 x버튼 누르면 실행. (메인으로 돌아가기)
   const onSearchCloseClick = useCallback(() => {
     setSearchString('');
@@ -107,7 +114,8 @@ const App = ({ memos }: AppProps) => {
       <h2>검색하기</h2>
       <div className='button-and-search'>
         <input type='button' value='검색' onClick={onSearchClick} />
-        <input type='search' placeholder='태그를 띄어쓰기해서 입력해주세요' value={searchString} onChange={onSearchChange} />
+        <input type='search' placeholder='태그를 띄어쓰기해서 입력해주세요' 
+          value={searchString} onChange={onSearchChange} onKeyUp={onSearchKeyUp} />
       </div>
       
       <hr />
