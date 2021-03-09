@@ -66,6 +66,13 @@ const App = ({ memos }: AppProps) => {
   else
     visibleMemos = memos;
 
+  // 수정할 때마다 보여지는 순서가 바뀌면 곤란하므로 id순으로 정렬
+  // any로 한 이유: id가 undefined일 수 있다는 에러가 뜸... 
+  // 근데 visibleMemos는 id가 모두 존재할 수 밖에 없음
+  visibleMemos.sort((memo1: any, memo2: any) => {
+    return memo1.id - memo2.id;
+  });
+
   // 메모를 클릭하면 현재 편집 중인 메모를 설정함
   const memoComponents = visibleMemos.map(memo => 
     <MemoPreview key={memo.id} memo={memo} onClickMemo={(memo: Memo) => setCurrentMemo(memo)} />
