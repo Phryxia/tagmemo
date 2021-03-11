@@ -75,10 +75,10 @@
 /* 취소 버튼 */
 .memo-editor-buttons input[type='button']:nth-child(1) {
   background-color: #ED5959;
+  margin-right: 8px;
 }
 
 /* 수정 버튼 */
 .memo-editor-buttons input[type='button']:nth-child(2) {
   background-color: #5395FF;
-  margin-right: 8px;
 }
