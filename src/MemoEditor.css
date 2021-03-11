@@ -36,8 +36,10 @@
 
 /* 태그들 */
 .memo-editor-tags {
+  height: 60px;
   font-size: 12px;
   word-wrap: break-word;
+  overflow-y: scroll;
 }
 
 /* 태그 추가 입력기를 감싼 div */
