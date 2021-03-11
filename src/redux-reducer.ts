@@ -1,7 +1,7 @@
 import Memo from './Memo';
-import State, { initialState } from './redux-state';
+import State from './redux-state';
 
-export default function rootReducer(state = initialState, action: any): State {
+export default function rootReducer(state: any, action: any): State {
   switch (action.type) {
     // 메모를 만든다. payload는 id를 제외한 모든 필드가 들어간 Memo이다.
     case 'memo/add':

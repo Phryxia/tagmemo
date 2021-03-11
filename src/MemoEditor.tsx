@@ -5,9 +5,16 @@ import * as Util from './Util';
 import './MemoEditor.css';
 
 interface MemoEditorProps {
+  // 에디터의 초기값으로 채울 메모
   memo: Memo,
+
+  // 수정하기를 누르면 호출된다. 인자는 수정된 메모 객체. (id는 같지만 레퍼런스는 다른 객체임)
   onClickModify: (memo: Memo) => void,
+
+  // 취소하기를 누르면 호출된다.
   onClickCancel: () => void,
+
+  // 현재 편집기가 방금 막 생성한 메모를 불러오는지 여부. (문구가 달라짐)
   isNewMemo: boolean
 }
 
