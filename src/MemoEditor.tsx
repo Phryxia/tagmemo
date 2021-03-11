@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import Memo from './Memo';
+import React, { useState, useCallback, useEffect } from 'react';
+import Memo, { memosAreEqual } from './Memo';
 import Tag from './Tag';
 import * as Util from './Util';
 import './MemoEditor.css';
@@ -52,6 +52,19 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
   const onClickCancelButton = useCallback(() => {
     onClickCancel();
   }, [onClickCancel]);
+
+  // ESC 누르면 취소 누른 거랑 동일하게 동작
+  useEffect(() => {
+    document.onkeyup = (event) => {
+      if (event.key === 'Escape') {
+        // 수정에 변화가 있으면 물어보고 취소함
+        if (!memosAreEqual(memo, { content, tags, modifiedAt }) && !window.confirm('수정을 취소하시겠습니까?'))
+          return;
+
+        onClickCancel();
+      }
+    };
+  }, [onClickCancel, content, tags, modifiedAt]);
 
   // 태그 삭제 버튼 핸들러
   const onClickTagClose = useCallback((deletedTag: string) => {
