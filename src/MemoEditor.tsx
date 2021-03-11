@@ -65,11 +65,11 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
 
   // 스페이스나 엔터 치면, 공백이 아니면 태그를 추가함
   const onKeyUpNewTag = useCallback((event) => {
-    if ((event.key === ' ' || event.key === 'Enter') && newTag) {
-      setTags((tags: string[]) => [...tags, newTag]);
+    if ((event.key === ' ' || event.key === 'Enter') && newTag && !tags.includes(newTag)) {
+      setTags([...tags, newTag]);
       setNewTag('');
     }
-  }, [newTag]);
+  }, [tags, newTag]);
 
   return (
     <div className='memo-editor'>
