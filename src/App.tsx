@@ -75,8 +75,18 @@ const App = ({ memos }: AppProps) => {
 
   // 메모 편집기 모달에서 취소 누르면 실행
   const onClickCancel = useCallback(() => {
+    // 새로운 메모를 생성할 때 취소가 눌리면 내용 모두 인보크함.
+    if (isNewMemo) {
+      const memos = store.getState().memos;
+      if (memos.length > 0) {
+        store.dispatch({
+          type: 'memo/remove',
+          payload: memos[memos.length - 1].id
+        });
+      }
+  }
     setCurrentMemo(null);
-  }, []);
+  }, [isNewMemo]);
 
   // 현재 보여질 메모 컴포넌트들을 설정
   // 굳이 App에서 이걸 만들어서 내려보내는 이유는
@@ -86,8 +96,8 @@ const App = ({ memos }: AppProps) => {
     visibleMemos = searchMemos(memos, lastKeywords);
   else {
     visibleMemos = memos;
-   
-    // 수정할 때마다 보여지는 순서가 바뀌면 곤란하므로 id순으로 정렬
+
+    // 수정할 때마다 보여지는 순서가 바뀌면 곤란하므로 id순으로 정렬 -> any 보다는 unknown 으로 하시는 것이 좋을 것 같습니다.
     // any로 한 이유: id가 undefined일 수 있다는 에러가 뜸... 
     // 근데 visibleMemos는 id가 모두 존재할 수 밖에 없음
     visibleMemos.sort((memo1: any, memo2: any) => {
