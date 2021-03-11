@@ -14,7 +14,7 @@ interface SearchedMemoListProps {
 const SearchedMemoList = ({ memoComponents, onClose }: SearchedMemoListProps) => {
   const onClickClose = useCallback(() => {
     onClose();
-  }, []);
+  }, [onClose]);
   return (
     <React.Fragment>
       <h2 className='no-wrap'>검색결과</h2>
