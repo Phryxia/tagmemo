@@ -80,7 +80,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
       </div>
 
       {/* 메모 입력 */}
-      <textarea value={content} onChange={onChangeTextarea}></textarea>
+      <textarea value={content} onChange={onChangeTextarea} placeholder='내용을 입력해주세요...'></textarea>
       
       {/* 태그들 */}
       <div className='memo-editor-header'>태그</div>

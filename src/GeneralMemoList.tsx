@@ -21,7 +21,7 @@ const GeneralMemoList = ({ memoComponents, onMemoAdd }: GeneralMemoListProps) =>
     store.dispatch({
       type: 'memo/add',
       payload: {
-        content: '내용을 입력하세요...',
+        content: '',
         tags: [],
         modifiedAt: new Date()
       }
