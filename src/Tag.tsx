@@ -14,7 +14,7 @@ const Tag = React.memo(({ tag, onClickClose }: TagProps) => {
   // 닫기 버튼 눌렀을 때 호출
   const onClickCloseButton = useCallback((event) => {
     onClickClose(tag);
-  }, [tag]);
+  }, [tag, onClickClose]);
 
   return (
     <div className='tag'>

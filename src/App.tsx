@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import Memo, { tagsArrayAreEqual } from './Memo';
+import Memo from './Memo';
 import GeneralMemoList from './GeneralMemoList';
 import SearchedMemoList from './SearchedMemoList';
 import MemoEditor from './MemoEditor';
@@ -46,7 +46,7 @@ const App = ({ memos }: AppProps) => {
       setCurKeywords(trimmed.split(' '));
     else
       setCurKeywords([]);
-  }, [curKeywords]);
+  }, []);
 
   // 검색 결과로 보여질 키워드를 갱신함.
   const onSearchClick = useCallback(event => {
@@ -58,7 +58,7 @@ const App = ({ memos }: AppProps) => {
     if (event.key === 'Enter') {
       onSearchClick(null);
     }
-  }, [curKeywords]);
+  }, [onSearchClick]);
 
   // 검색 결과를 보여주는 창에서 x버튼 누르면 실행. (메인으로 돌아가기)
   const onSearchCloseClick = useCallback(() => {

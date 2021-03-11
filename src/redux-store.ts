@@ -12,10 +12,10 @@ if (savedJSON) {
   const json = JSON.parse(savedJSON);
 
   savedState = {
-    ... json,
+    ...json,
     memos: json.memos.map((memo: any): Memo => {
       return {
-        ... memo,
+        ...memo,
         modifiedAt: new Date(memo.modifiedAt)
       };
     }),

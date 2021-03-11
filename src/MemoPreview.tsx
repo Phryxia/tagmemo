@@ -16,7 +16,7 @@ interface MemoPreviewProps {
 const MemoPreview = React.memo(({ memo, onClickMemo }: MemoPreviewProps) => {
   const onClickArea = useCallback((event) => {
     onClickMemo(memo);
-  }, [memo]);
+  }, [memo, onClickMemo]);
 
   const onClickCloseButton = useCallback(() => {
     store.dispatch({ type: 'memo/remove', payload: memo.id });
@@ -32,7 +32,7 @@ const MemoPreview = React.memo(({ memo, onClickMemo }: MemoPreviewProps) => {
 
       {/* 메모 내용 미리보기 */}
       <div className='content-and-tags' onClick={onClickArea}>
-        <a>{summarize(memo.content, 25)}</a>
+        <span>{summarize(memo.content, 25)}</span>
 
         {/* 태그들 */}
         <div className='memo-preview-tags'>

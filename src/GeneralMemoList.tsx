@@ -27,7 +27,7 @@ const GeneralMemoList = ({ memoComponents, onMemoAdd }: GeneralMemoListProps) =>
       }
     });
     onMemoAdd(store.getState().lastCreatedMemo as Memo);
-  }, []);
+  }, [onMemoAdd]);
 
   return (
     <div className='memos-container'>

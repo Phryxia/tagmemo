@@ -46,12 +46,12 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
       modifiedAt: newDate
     });
     setModifiedAt(newDate);
-  }, [memo, content, tags]);
+  }, [memo, content, tags, onClickModify]);
 
   // 취소 버튼 핸들러
   const onClickCancelButton = useCallback(() => {
     onClickCancel();
-  }, []);
+  }, [onClickCancel]);
 
   // 태그 삭제 버튼 핸들러
   const onClickTagClose = useCallback((deletedTag: string) => {
