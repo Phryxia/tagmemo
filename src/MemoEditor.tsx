@@ -77,11 +77,11 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
   }, []);
   
   // 새 태그를 추가함
-  const addNewTag = (newTag: string) => {
+  const addNewTag = useCallback((newTag: string) => {
     if (!newTag || tags.includes(newTag))
       return ;
     setTags([...tags, newTag]);
-  };
+  }, [tags]);
 
   // 스페이스나 엔터 치면, 공백이 아니면 태그를 추가함
   const onKeyUpNewTag = useCallback((event) => {
@@ -97,7 +97,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
         return newTags;
       });
     }
-  }, [tags, newTag, addNewTag]);
+  }, [newTag, addNewTag]);
 
   const onBlurNewTag = useCallback((event) => {
     addNewTag(newTag);
