@@ -72,13 +72,13 @@
   cursor: pointer;
 }
 
-/* 수정 버튼 */
+/* 취소 버튼 */
 .memo-editor-buttons input[type='button']:nth-child(1) {
-  background-color: #5395FF;
-  margin-right: 8px;
+  background-color: #ED5959;
 }
 
-/* 취소 버튼 */
+/* 수정 버튼 */
 .memo-editor-buttons input[type='button']:nth-child(2) {
-  background-color: #ED5959;
+  background-color: #5395FF;
+  margin-right: 8px;
 }

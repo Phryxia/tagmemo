@@ -91,8 +91,8 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
 
       {/* 버튼 */}
       <div className='memo-editor-buttons'>
-        <input type='button' value={isNewMemo ? '확인' : '수정'} onClick={onClickModifyButton} />
         <input type='button' value='취소' onClick={onClickCancelButton} />
+        <input type='button' value={isNewMemo ? '확인' : '수정'} onClick={onClickModifyButton} />
       </div>
     </div>
   );
