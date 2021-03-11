@@ -16,20 +16,18 @@ export default Memo;
  * @param arr2 태그 배열 2
  */
 export function tagsArrayAreEqual(arr1: string[], arr2: string[]) {
-  let out = arr1.length === arr2.length;
-  
-  if (!out)
-    return out;
+  if (arr1.length !== arr2.length)
+    return false;
   
   // 순서만 다르고 내용물은 같은 경우를 감지하기 위해서
   arr1 = arr1.slice().sort();
   arr2 = arr2.slice().sort();
   
-  for (let i = 0; out && i < arr1.length; ++i) {
-    out = out && arr1[i] === arr2[i];
-  }
+  for (let i = 0; i < arr1.length; ++i)
+    if (arr1[i] !== arr2[i])
+      return false;
 
-  return out;
+  return true;
 }
 
 /**

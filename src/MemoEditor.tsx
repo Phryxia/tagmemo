@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef } from 'react';
-import Memo from './Memo';
+import React, { useState, useCallback, useEffect } from 'react';
+import Memo, { memosAreEqual } from './Memo';
 import Tag from './Tag';
 import * as Util from './Util';
 import './MemoEditor.css';
@@ -81,50 +81,55 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
     onClickCancel();
   }, [onClickCancel]);
 
+  // ESC 누르면 취소 누른 거랑 동일하게 동작
+  useEffect(() => {
+    document.onkeyup = (event) => {
+      if (event.key === 'Escape') {
+        // 수정에 변화가 있으면 물어보고 취소함
+        if (!memosAreEqual(memo, { content, tags, modifiedAt }) && !window.confirm('수정을 취소하시겠습니까?'))
+          return;
+
+        onClickCancel();
+      }
+    };
+  }, [memo, onClickCancel, content, tags, modifiedAt]);
+
   // 태그 삭제 버튼 핸들러
   const onClickTagClose = useCallback((deletedTag: string) => {
     setTags((tags: string[]) => tags.filter(tag => tag !== deletedTag));
   }, []);
 
-  const addNewTag = useCallback((newTag: string) => {
-    if (newTag.trim() === '') {
-      return;
-    }
-    if (tags.filter((tag)=>tag===newTag).length === 0) {
-      setTags((tags: string[]) => [...tags, newTag]);
-    }
-}, [tags]);
-
-
   // 태그 추가하기 인풋 핸들러
   const onChangeNewTag = useCallback((event) => {
     setNewTag(event.target.value.trim());
   }, []);
+  
+  // 새 태그를 추가함
+  const addNewTag = (newTag: string) => {
+    if (!newTag || tags.includes(newTag))
+      return ;
+    setTags([...tags, newTag]);
+  };
 
   // 스페이스나 엔터 치면, 공백이 아니면 태그를 추가함
   const onKeyUpNewTag = useCallback((event) => {
-    if ((event.key === ' ' || event.key === 'Enter')) {
+    if (event.key === ' ' || event.key === 'Enter') {
       addNewTag(newTag);
       setNewTag('');
     }
-  }, [newTag, addNewTag]);
-
-  // 태그 입력창에 아무것도 없는 상태에서 백스페이스 누르면 기존에 태그가 있을 경우 그 태그 삭제함
-  const onKeyDownDeleteTag = useCallback((event) => {
-    if (event.key === 'Backspace' && newTag === '') {
+    // 백스페이스 누르고 newTag가 ''면 태그를 지움
+    else if (event.key === 'Backspace' && newTag === '') {
       setTags((tags: string[]) => {
         const newTags = [...tags];
         newTags.pop();
         return newTags;
       });
     }
-  }, [newTag]);
+  }, [tags, newTag, addNewTag]);
 
   const onBlurNewTag = useCallback((event) => {
-    if (newTag.trim() !== '') {
-      addNewTag(newTag);
-      setNewTag('');
-    }
+    addNewTag(newTag);
+    setNewTag('');
   }, [newTag, addNewTag]);
 
   return (
@@ -136,7 +141,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
       </div>
 
       {/* 메모 입력 */}
-      <textarea placeholder={"내용을 입력하세요..."} value={content} onChange={onChangeTextarea}></textarea>
+      <textarea value={content} onChange={onChangeTextarea} placeholder='내용을 입력해주세요...'></textarea>
       
       {/* 태그들 */}
       <div className='memo-editor-header'>태그</div>
@@ -144,7 +149,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
         overflowY:"scroll", height:"60px"
       }}>
         {tags.map((tag: string) => <Tag key={tag} tag={tag} onClickClose={onClickTagClose} />)}
-        <div>+<input type='text' value={newTag} onChange={onChangeNewTag} onKeyUp={onKeyUpNewTag} onKeyDown={onKeyDownDeleteTag} onBlur={onBlurNewTag} /></div>
+        <div>+<input type='text' value={newTag} onChange={onChangeNewTag} onKeyUp={onKeyUpNewTag} onBlur={onBlurNewTag} /></div>
       </div>
 
       {/* 버튼 */}

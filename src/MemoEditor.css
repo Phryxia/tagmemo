@@ -36,8 +36,10 @@
 
 /* 태그들 */
 .memo-editor-tags {
+  height: 60px;
   font-size: 12px;
   word-wrap: break-word;
+  overflow-y: scroll;
 }
 
 /* 태그 추가 입력기를 감싼 div */
@@ -72,13 +74,13 @@
   cursor: pointer;
 }
 
-/* 수정 버튼 */
+/* 취소 버튼 */
 .memo-editor-buttons input[type='button']:nth-child(1) {
-  background-color: #5395FF;
+  background-color: #ED5959;
   margin-right: 8px;
 }
 
-/* 취소 버튼 */
+/* 수정 버튼 */
 .memo-editor-buttons input[type='button']:nth-child(2) {
-  background-color: #ED5959;
+  background-color: #5395FF;
 }
