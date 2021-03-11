@@ -21,13 +21,9 @@ interface MemoEditorProps {
 const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEditorProps) => {
   // 현재 편집기가 표시할 콘텐츠
   const [content, setContent] = useState<string> (memo.content);
-  // 수정 전 content
-  const originalContent = useRef<string>(memo.content); // persist 
 
   // 현재 편집기가 표시할 태그들
   const [tags, setTags] = useState<string[]> (memo.tags);
-  // 수정 전 tags
-  const originalTags = useRef<string[]>([...memo.tags]);
 
   // 현재 편집기가 표시할 수정날짜
   const [modifiedAt, setModifiedAt] = useState<Date> (memo.modifiedAt);
@@ -42,30 +38,6 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
 
   // 수정 버튼 핸들러
   const onClickModifyButton = useCallback(() => {
-    // 만약 새로운 메모일 때 아무 내용이 없으면 아무 것도 하지 않음.
-    if (isNewMemo && content.trim() === '') {
-      onClickCancel();
-      return;
-    }
-    // 만약 수정 중일 때 수정된 내용이 없으면 (태그랑 내용 둘 다 비교) 아무 것도 하지 않음.
-    const sorted1 = tags.sort();
-    const sorted2 = originalTags.current.sort();
-    let isDiff = false;
-    if (sorted1.length === sorted2.length) {
-      for (let i = 0; i < sorted1.length; i++) {
-        if (sorted1[i] !== sorted2[i]) {
-          isDiff = true;
-          break;
-        }
-      }
-    } else {
-      isDiff = true;
-    }
-    if (!isNewMemo && content.trim() === originalContent.current.trim() && !isDiff) {
-        onClickCancel();
-        return;
-    }
-
     const newDate = new Date();
     onClickModify({
       id: memo.id,
@@ -74,7 +46,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
       modifiedAt: newDate
     });
     setModifiedAt(newDate);
-  }, [memo, content, tags, onClickModify, isNewMemo, onClickCancel]);
+  }, [memo, content, tags, onClickModify]);
 
   // 취소 버튼 핸들러
   const onClickCancelButton = useCallback(() => {
