@@ -64,7 +64,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
         onClickCancel();
       }
     };
-  }, [onClickCancel, content, tags, modifiedAt]);
+  }, [memo, onClickCancel, content, tags, modifiedAt]);
 
   // 태그 삭제 버튼 핸들러
   const onClickTagClose = useCallback((deletedTag: string) => {
