@@ -16,13 +16,13 @@ const SearchedMemoList = ({ memoComponents, onClose }: SearchedMemoListProps) =>
     onClose();
   }, [onClose]);
   return (
-    <React.Fragment>
+    <>
       <h2 className='no-wrap'>검색결과</h2>
       <input type='button' value='×' id='cancel-search' className='close-button' onClick={onClickClose} /><br />
       <div className='memos-container'>
         {memoComponents}
       </div>
-    </React.Fragment>
+    </>
   )
 };
 
