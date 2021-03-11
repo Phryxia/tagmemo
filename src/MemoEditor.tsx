@@ -21,9 +21,13 @@ interface MemoEditorProps {
 const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEditorProps) => {
   // 현재 편집기가 표시할 콘텐츠
   const [content, setContent] = useState<string> (memo.content);
+  // 수정 전 content
+  const originalContent = useRef<string>(memo.content); // persist 
 
   // 현재 편집기가 표시할 태그들
   const [tags, setTags] = useState<string[]> (memo.tags);
+  // 수정 전 tags
+  const originalTags = useRef<string[]>([...memo.tags]);
 
   // 현재 편집기가 표시할 수정날짜
   const [modifiedAt, setModifiedAt] = useState<Date> (memo.modifiedAt);
@@ -38,6 +42,30 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
 
   // 수정 버튼 핸들러
   const onClickModifyButton = useCallback(() => {
+    // 만약 새로운 메모일 때 아무 내용이 없으면 아무 것도 하지 않음.
+    if (isNewMemo && content.trim() === '') {
+      onClickCancel();
+      return;
+    }
+    // 만약 수정 중일 때 수정된 내용이 없으면 (태그랑 내용 둘 다 비교) 아무 것도 하지 않음.
+    const sorted1 = tags.sort();
+    const sorted2 = originalTags.current.sort();
+    let isDiff = false;
+    if (sorted1.length === sorted2.length) {
+      for (let i = 0; i < sorted1.length; i++) {
+        if (sorted1[i] !== sorted2[i]) {
+          isDiff = true;
+          break;
+        }
+      }
+    } else {
+      isDiff = true;
+    }
+    if (!isNewMemo && content.trim() === originalContent.current.trim() && !isDiff) {
+        onClickCancel();
+        return;
+    }
+
     const newDate = new Date();
     onClickModify({
       id: memo.id,
@@ -46,7 +74,7 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
       modifiedAt: newDate
     });
     setModifiedAt(newDate);
-  }, [memo, content, tags, onClickModify]);
+  }, [memo, content, tags, onClickModify, isNewMemo, onClickCancel]);
 
   // 취소 버튼 핸들러
   const onClickCancelButton = useCallback(() => {
@@ -75,14 +103,34 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
   const onChangeNewTag = useCallback((event) => {
     setNewTag(event.target.value.trim());
   }, []);
+  
+  // 새 태그를 추가함
+  const addNewTag = (newTag: string) => {
+    if (!newTag || tags.includes(newTag))
+      return ;
+    setTags([...tags, newTag]);
+  };
 
   // 스페이스나 엔터 치면, 공백이 아니면 태그를 추가함
   const onKeyUpNewTag = useCallback((event) => {
-    if ((event.key === ' ' || event.key === 'Enter') && newTag && !tags.includes(newTag)) {
-      setTags([...tags, newTag]);
+    if (event.key === ' ' || event.key === 'Enter') {
+      addNewTag(newTag);
       setNewTag('');
     }
-  }, [tags, newTag]);
+    // 백스페이스 누르고 newTag가 ''면 태그를 지움
+    else if (event.key === 'Backspace' && newTag === '') {
+      setTags((tags: string[]) => {
+        const newTags = [...tags];
+        newTags.pop();
+        return newTags;
+      });
+    }
+  }, [tags, newTag, addNewTag]);
+
+  const onBlurNewTag = useCallback((event) => {
+    addNewTag(newTag);
+    setNewTag('');
+  }, [newTag, addNewTag]);
 
   return (
     <div className='memo-editor'>
@@ -97,9 +145,11 @@ const MemoEditor = ({ memo, onClickModify, onClickCancel, isNewMemo }: MemoEdito
       
       {/* 태그들 */}
       <div className='memo-editor-header'>태그</div>
-      <div className='memo-editor-tags'>
+      <div className='memo-editor-tags' style={{
+        overflowY:"scroll", height:"60px"
+      }}>
         {tags.map((tag: string) => <Tag key={tag} tag={tag} onClickClose={onClickTagClose} />)}
-        <div>+<input type='text' value={newTag} onChange={onChangeNewTag} onKeyUp={onKeyUpNewTag} /></div>
+        <div>+<input type='text' value={newTag} onChange={onChangeNewTag} onKeyUp={onKeyUpNewTag} onBlur={onBlurNewTag} /></div>
       </div>
 
       {/* 버튼 */}
